@@ -52,6 +52,14 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       ]);
     }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (_scrollController.position.maxScrollExtent == 0) {
+        // not scroll content, call load more
+        if (_isLoading) return;
+        _isLoading = true;
+        onLoadMore();
+      }
+    });
   }
 
   @override
@@ -82,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       : chatItemWidget(index);
                 },
                 controller: _scrollController,
-                physics: ChatScrollPhysics(),
+                physics: ChatScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                 reverse: true,
                 itemCount: _chatRecords.length + 1,
               ),
